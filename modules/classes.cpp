@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <environment.h>
 
 using namespace std;
 
@@ -13,37 +14,119 @@ protected:
 }
 
 class Personagem {
-private:
+protected:
   string nome;
   int ptVida, ptAtq, ptDef;
+  int sangrando = 0;
   Ataque ataques[2];
 
 public:
-  Personagem(string nome, int ptVida, int ptAtq, int ptDef)
-      : nome(nome), ptVida(ptVida), ptAtq(ptAtq), ptDef(ptDef) {}
+  Personagem(int ptVida, int ptDef, int ptAtq): ptVida(ptVida), ptDef(ptDef), ptAtq(ptAtq){}
+
+  void showEstatisticas() {
+	
+  }
+
+  virtual void atacar(){
+    cout << "Um personagem atacou!" << endl;
+  }
+
+  virtual void morrer() {
+    cout << "O personagem morreu!" << endl;
+  }
 };
 
-class Bruxo : Personagem {
-private:
-  string circuloDeFogo public:
+class Batedor : Personagem {
+  private:
+    int granadaIncendiaria = 20, ptVida, ptDef, ptAtq; 
+  public:
+
+    Batedor(){
+		  this->ptVida = BATEDOR_VIDA;
+    	this->ptDef = BATEDOR_DEFESA;
+    	this->ptAtq = BATEDOR_ATAQUE;
+	}
+
+    void atacar() override{
+      
+    }
 };
 
-class Ladrao : Personagem {
-private:
-  string Furto
+class Guerreiro : Personagem {
+  private:
+    int miniGun = 30, ptVida, ptDef, ptAtq;
+  public:
 
-      public:
+    Guerreiro(){
+      this->ptVida = GUERREIRO_VIDA;
+      this->ptDef = GUERREIRO_DEFESA;
+      this->ptAtq = GUERREIRO_ATAQUE;
+    }
+
+    void atacar() override{
+        
+    }
 };
 
-class Arqueiro : Personagem {
-private:
-  string FlechaFogo
+class Engenheiro : Personagem {
+  private:
+    int sentryGun = 20, ptVida, ptDef, ptAtq;
+  public:
 
-      public:
+    Engenheiro(){
+      this->ptVida = ENGENHEIRO_VIDA;
+      this->ptDef = ENGENHEIRO_DEFESA;
+      this->ptAtq = ENGENHEIRO_ATAQUE;
+    }
+
+    void atacar() override{
+      
+    }
 };
 
-class Guerreiro : Personagem {};
+class Escavador : Personagem {
+  private:
+    int lancaChamas = 20, ptVida, ptDef, ptAtq;
+  public:
 
-class Elfo : Personagem {};
+    Escavador(){
+      this->ptVida = ESCAVADOR_VIDA;
+      this->ptDef = ESCAVADOR_DEFESA;
+      this->ptAtq = ESCAVADOR_ATAQUE;
+    }
 
-class Clerigo : Personagem {};
+    void atacar() override{
+      
+    }
+};
+
+class Medico : Personagem {
+  private:
+    int quitBomba = 30, ptVida, ptDef, ptAtq;
+  public:
+
+    Medico(){
+      this->ptVida = MEDICO_VIDA;
+      this->ptDef = MEDICO_DEFESA;
+      this->ptAtq = MEDICO_ATAQUE;
+    }
+
+    void atacar() override{
+      
+    }
+};
+
+
+
+
+
+class Monstro{
+  private:
+    int ptVida, ptDef, ptAtq;
+  public:
+    Monstro(int ptVida, int ptDef, int ptAtq): ptVida(ptVida), ptDef(ptDef), ptAtq(ptAtq){}
+
+    virtual void atacar(){
+      cout << "O monstro atacou!" << endl;
+    }
+};

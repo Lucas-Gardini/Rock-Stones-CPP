@@ -1,1 +1,20 @@
 EXPLICAR AQUI DEPOIS COMO FEZ, O QUE FEZ, ETC
+
+https://stackoverflow.com/questions/120876/what-are-the-rules-for-calling-the-base-class-constructor
+
+
+class Veiculo {
+    protected:
+        string marca;
+        int ano;
+    public:
+        Veiculo(string m, int a) : marca(m), ano(a) {}
+};
+
+class ModeloCarro : public Veiculo {
+    private:
+        string modelo;
+    public:
+        ModeloCarro(string m, int a, string model) : Veiculo(m, a), modelo(model) {}
+       
+};

@@ -1,0 +1,5 @@
+{
+	"scripts": {
+		"start": "g++ -o rpg main.cpp modules/environment.cpp modules/utils.cpp && ./rpg"
+	}
+}
