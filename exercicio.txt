@@ -1,0 +1,61 @@
+O RPG simulará um combate em uma arena entre personagens. Terá (no mínimo) as classes JogoRPG,
+Personagem, e mais 6 classes distintas representando diferentes arquétipos. Por exemplo, Guerreiro(a),
+Bruxo(a), Ladrão, Arqueiro(a), etc.
+
+A classe Personagem deve ter no mínimo os seguintes atributos:
+Nome do personagem.
+Pontos de vida (VID).
+Pontos de ataque (ATQ).
+Pontos de defesa (DEF).
+Lista de personagens derrotados.
+
+Cada classe que identifica um arquétipo será derivada da classe Personagem.
+
+Cada arquétipo terá um ataque especial, exclusivo de sua classe. Este ataque poderá ocorrer,
+aleatoriamente, durante um round de combate. Ou seja, em vez do ataque normal, ocorrerá o ataque
+especial. Este ataque terá um nome específico e causará mais dano do que um ataque normal.
+
+O ataque especial também poderá causar sangramento, onde o outro personagem sangrará por um número
+de rounds calculado aleatoriamente (mínimo de 2 rounds, máximo de 6 rounds). O sangramento causará
+uma perda (baixa) de vida a cada round, independente do dano atual recebido no round.
+O sangramento deve ser calculado no início de cada round, portanto, um personagem pode ser derrotado
+sem receber dano de ataque no round.
+Caso ambos os personagens fiquem sem vida devido a sangrarem no início do round, um dos dois
+personagens será sorteado para avançar e o outro será considerado derrotado.
+
+Implemente construtores para inicializar o nome, VID, ATQ e DEF do personagem. Implemente um
+método para exibir as estatísticas do personagem.
+
+Cada personagem irá armazenar a lista de personagens que derrotou. Use alguma estrutura de dados para
+armazenar cada personagem que foi derrotado.
+
+Cada combate poderá durar no máximo 10 rounds. Se nenhum dos dois personagens forem derrotados ao
+fim de 10 rounds, o personagem que causou mais dano será considerado o vencedor.
+
+Ao fim de cada combate seu jogo deve exibir uma tabela com as estatísticas do combate, considerando
+dano efetuado por cada personagem, vida restante de cada personagem, número de rounds ocorridos, e
+quantos ataques especiais ocorreram.
+
+
+A classe JogoRPG deve ser responsável por criar e gerenciar personagens. Use alguma estrutura de dados
+para armazenar os personagens. Implemente um construtor que permita criar um número específico de
+personagens. Implemente um método para adicionar personagens ao jogo. Implemente um método para
+listar todos os personagens no jogo. Implemente um método que permita aos personagens lutarem entre si.
+
+A luta ocorre entre dois personagens, reduzindo os pontos de vida do alvo considerando o ATQ de quem
+ataca, a DEF de quem defende, e um número sorteado (RND) que influenciará neste cálculo.
+Cada personagem ataca por vez, e será sorteado quem será o primeiro a atacar.
+Cada personagem atacará uma vez por round. Ou seja, ambos os personagens atacam em um round, a não
+ser que um deles seja derrotado no round.
+Se um personagem ficar com VID zero ou menos, ele é derrotado e removido do jogo. Exiba uma
+mensagem informando o resultado da luta.
+Você deve criar pares de combatentes, e os combates devem ocorrer até que exista apenas um personagem
+sobrando. Crie uma estrutura estilo torneio.
+A vida do personagem vencedor recuperará ao fim de cada combate.
+
+Crie uma função main() que executará o seu jogo.
+Deve criar no mínimo 16 personagens de diferentes arquétipos. Estes irão se enfrentar no torneio.
+Assim que sobrar apenas um vencedor, o jogo deve exibir as seguintes informações referentes ao
+personagem campeão do torneio: VID, ATQ, DEF, arquétipos dos personagens que derrotou no torneio
+(acessando o personagem derrotado e não apenas o nome deles), dano total causado, dano total sofrido,
+maior dano causado em um round, maior dano recebido em um round.
