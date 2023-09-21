@@ -66,57 +66,15 @@ void printInicio() {
   printTable(cabecalho, tabela);
 }
 
-void printDetalhesClasse(int classe) {
-	cout << "Detalhes da classe " << classe << ":" << endl << endl;
-
- 	vector<string> cabecalho = {CLASSES[classe]};
-	vector<vector<string>> tabela;
-
-	switch (classe) {
-		case 1:
-			tabela = {
-				{generateVida(BATEDOR_VIDA)},
-				{generateArmadura(BATEDOR_DEFESA)},
-				{generateAtaque(BATEDOR_ATAQUE)},
-				{generateAtaqueEspecial(0)}
+void printDetalhesClasse(string nome, int vida, int defesa, int ataqueB, int ataqueE) {
+ 	vector<string> cabecalho = {"Estatísticas do jogador:\n\n"};
+	vector<vector<string>> tabela = {
+				{nome},
+				{to_string(vida)},
+				{to_string(defesa)},
+				{to_string(ataqueB)},
+				{to_string(ataqueE)}
 			};
-			break;
-		case 2:
-			tabela = {
-				{generateVida(GUERREIRO_VIDA)},
-				{generateArmadura(GUERREIRO_DEFESA)},
-				{generateAtaque(GUERREIRO_ATAQUE)},
-				{generateAtaqueEspecial(0)}
-			};
-			break;
-		case 3:
-			tabela = {
-				{generateVida(ENGENHEIRO_VIDA)},
-				{generateArmadura(ENGENHEIRO_DEFESA)},
-				{generateAtaque(ENGENHEIRO_ATAQUE)},
-				{generateAtaqueEspecial(0)}
-			};
-			break;
-		case 4:
-			tabela = {
-				{generateVida(ESCAVADOR_VIDA)},
-				{generateArmadura(ESCAVADOR_DEFESA)},
-				{generateAtaque(ESCAVADOR_ATAQUE)},
-				{generateAtaqueEspecial(0)}
-			};
-			break;
-		case 5:
-			tabela = {
-				{generateVida(MEDICO_VIDA)},
-				{generateArmadura(MEDICO_DEFESA)},
-				{generateAtaque(MEDICO_ATAQUE)},
-				{generateAtaqueEspecial(0)}
-			};
-			break;
-		default:
-			cout << "Classe inválida!" << endl;
-			break;
-	}
 
 	printTable(cabecalho, tabela);
 }
@@ -129,4 +87,9 @@ void printOpcoes() {
 
 void limparTerminal() {
 	system("clear||cls");
+}
+
+int gerarNumeroAleatorio(int min, int max) {
+	srand(time(NULL));
+	return (rand() % (max - min + 1) + min);
 }

@@ -8,9 +8,11 @@
 using namespace std;
 
 void printTable(vector<int> cabecalho, vector<vector<string>> tabela);
-void printDetalhesClasse(int classe);
+void printDetalhesClasse(string nome, int vida, int defesa, int ataqueB, int ataqueE);
 void printInicio();
 void printOpcoes();
 void limparTerminal();
+
+int gerarNumeroAleatorio(int min, int max);
 
 #endif
