@@ -1,5 +1,5 @@
-#ifndef A_CPP_INCLUDED
-#define A_CPP_INCLUDED
+#ifndef CLASSES_H_INCLUDED
+#define CLASSES_H_INCLUDED
 
 int AddFive(int In);
 

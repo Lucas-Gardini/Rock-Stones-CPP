@@ -1,3 +1,10 @@
+#ifndef ENV_H
+#define ENV_H
+
+#include <string>
+
+const std::string CLASSES[5] = {"Batedor", "Guerreiro", "Engenheiro", "Escavador", "Medico"};
+
 const int MINIMO_SANGRAMENTO = 2;
 const int MAXIMO_SANGRAMENTO = 6;
 const int DANO_SANGRAMENTO = 3;
@@ -21,3 +28,5 @@ const int ESCAVADOR_DEFESA = 3;
 const int MEDICO_VIDA = 60;
 const int MEDICO_ATAQUE = 20;
 const int MEDICO_DEFESA = 4;
+
+#endif

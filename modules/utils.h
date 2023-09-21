@@ -1,6 +1,5 @@
-#ifndef A_CPP_INCLUDED
-#define A_CPP_INCLUDED
-// ^^^ these are header guards, used to avoid multiple inclusions of the same header    
+#ifndef UTILS_H_INCLUDED
+#define UTILS_H_INCLUDED
 
 #include <iostream>
 #include <vector>
@@ -9,6 +8,9 @@
 using namespace std;
 
 void printTable(vector<int> cabecalho, vector<vector<string>> tabela);
+void printDetalhesClasse(int classe);
 void printInicio();
+void printOpcoes();
+void limparTerminal();
 
 #endif
