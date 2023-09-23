@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <stdlib.h> 
 #include ".env.h"
+
+// #include "utils.cpp"
 
 using namespace std;
 
@@ -15,12 +16,12 @@ class Ataque {
 class Personagem {
 	protected:
 	string nome;
-	int _HP, _ATQ, _DEF, _ESP, recarga;
+	int _HP, _ATQ, _DEF, _ESP, recargaTempo;
 	int debuff = 0;
 	Ataque ataques[2];
 
 	public:
-	Personagem(string nome, int ptVida, int ptDef, int ptAtq): _HP(ptVida), _ATQ(ptDef), _DEF(ptAtq){}
+	Personagem(string nome, int ptVida, int ptDef, int ptAtq, int recarga): nome(nome), _HP(ptVida), _ATQ(ptDef), _DEF(ptAtq), recargaTempo(recarga) {}
 
   bool VerificaVivo() {
     if(this->_HP > 0) {
@@ -44,17 +45,13 @@ class Personagem {
 		return estatisticas;
 	}
 
-	virtual void atacar() {
+	virtual int atacar(int turno) {
 		cout << "Um personagem atacou!" << endl;
 	}
 
 	virtual void morrer() {
 		cout << "O personagem morreu!" << endl;
 	}
-
-  	void setRecarga(int recarga) {
-      this->recarga = recarga;
-    }
 };
 
 class Batedor : public Personagem {
@@ -62,33 +59,46 @@ class Batedor : public Personagem {
    int granadaIncendiaria = BATEDOR_ATQ_ESPECIAL;
 
   public:
-    Batedor(string nome) : Personagem(nome, BATEDOR_VIDA, BATEDOR_DEFESA, BATEDOR_ATAQUE){}
 
-    // void atacar() override {
-    //   int escolha;
+    Batedor(string nome) : Personagem(nome, BATEDOR_VIDA, BATEDOR_DEFESA, BATEDOR_ATAQUE, recargaTempo){}
+
+    int atacar(int turno) override {
+      int escolha;
       
-    //   cout << "Selecione seu ataque: " << endl << "0- Ataque normal do batedor: Tiro de metralhadora - Dano: " << BATEDOR_ATAQUE << endl << "1- Ataque especial do batedor: Granada Incendiária - Dano: " << BATEDOR_ATQ_ESPECIAL << endl << ": ";
-    //   cin >> escolha;
+      while(true){
+        cout << "Selecione seu ataque: " << endl << "0- Ataque normal do batedor: Tiro de metralhadora - Dano: " << BATEDOR_ATAQUE << endl << "1- Ataque especial do batedor: Granada Incendiária - Dano: " << BATEDOR_ATQ_ESPECIAL << endl << ": ";
+        cin >> escolha;
+        if(escolha != 0 || escolha != 1){
+          cout << "Escolha inválida, por favor escolha entre 0 ou 1!!" << endl;
+        }
+        else{
+          break;
+        }
+      }
 
-    //   if(escolha == 0){
-    //     cout << "O batedor usou o ataque normal!";
-    //   }
+      if(escolha == 0){
+        cout << "O batedor usou o ataque normal!";
+        return BATEDOR_ATAQUE;
+      }
+      else{
+        if(recarga == 0){
+          cout << "O batedor usou o ataque especial!";
+           
+           int ran = Utilities::gerarNumeroAleatorio(0, 1);
 
-    //   else if(escolha == 1){
-    //     if(recargaBatedor == 0){
-    //       cout << "O batedor usou o ataque especial!";
-    //       srand (time(NULL));
+           if(ran == 0){
+            cout << "ATAQUE CRÍTICO!";
+            return BATEDOR_ATQ_ESPECIAL * 2;
+           }
 
-    //        if(rand() % 2 == 0){
-    //         cout << "ATAQUE CRITICO!";
-    //        }
-    //        setRecarga(4);
-    //     }
-    //     else {
-    //       setRecarga();
-    //     }
-    //   }
-    // }
+          return BATEDOR_ATQ_ESPECIAL;
+        }
+        else {
+          cout << "O ataque especial não está pronto! O personagem trocou para o ataque normal!" << endl;
+          return BATEDOR_ATAQUE;
+        }
+      }
+    }
 };
 
 class Guerreiro : public Personagem {
@@ -97,31 +107,6 @@ class Guerreiro : public Personagem {
   public:
     Guerreiro(string nome) : Personagem(nome, GUERREIRO_VIDA, GUERREIRO_DEFESA, GUERREIRO_ATAQUE){}
 
-    
-    // void atacar() override {
-    //   int escolha;
-      
-    //   cout << "Selecione seu ataque: " << endl << "0- Ataque normal do guerreiro: Tiro de metralhadora - Dano: " << GUERREIRO_ATAQUE << endl << "1- Ataque especial do Guerreiro: Granada Incendiária - Dano: " << GUERREIRO_ATQ_ESPECIAL << endl << ": ";
-    //   cin >> escolha;
-
-    //   if(escolha == 0){
-    //     cout << "O guerreiro usou o ataque normal!";
-    //   }
-
-    //   else if(escolha == 1){
-    //     if(recargaGuerreiro == 0){
-    //       cout << "O guerreiro usou o ataque especial!";
-    //       srand (time(NULL));
-
-    //        if(rand() % 2 == 0){
-    //         cout << "ATAQUE CRITICO!";
-    //        }
-    //     }
-    //     else {
-    //       setRecarga();
-    //     }
-    //   }
-    // }
 };
 
 class Engenheiro : public Personagem {
@@ -129,6 +114,7 @@ class Engenheiro : public Personagem {
    int sentryGun = ENGENHEIRO_ATQ_ESPECIAL;
   public:
     Engenheiro(string nome) : Personagem(nome, ENGENHEIRO_VIDA, ENGENHEIRO_DEFESA, ENGENHEIRO_ATAQUE){}
+
 };
 
 class Escavador : public Personagem {
@@ -136,6 +122,8 @@ class Escavador : public Personagem {
    int lancaChamas = ESCAVADOR_ATQ_ESPECIAL;
   public:
     Escavador(string nome) : Personagem(nome, ESCAVADOR_VIDA, ESCAVADOR_DEFESA, ESCAVADOR_ATAQUE){}
+
+     
 };
 
 class 	Medico : public Personagem {
@@ -143,6 +131,8 @@ class 	Medico : public Personagem {
    int kitBomba = MEDICO_ATQ_ESPECIAL;
   public:
     Medico(string nome) : Personagem(nome, MEDICO_VIDA, MEDICO_DEFESA, MEDICO_ATAQUE){}
+
+    
 };
 
 class Monstro{
@@ -158,6 +148,10 @@ class Monstro{
       } else {
         return false;
       }
+    }
+
+    void setVida(int dano){
+      this->_HP -= dano;
     }    
 
     virtual void atacar(){
@@ -235,8 +229,16 @@ class JogoRPG {
 
     // Inicio combate, (rascunho)
     void Batalha(Personagem jogador, Monstro m) {
+      int turno = 0;
       while (jogador.VerificaVivo() == true && m.VerificaVivo() == true) {
         // jogador.setDebuff()
+
+        cout << "A batalha se inicia!" << endl;
+
+        int personAtq = jogador.atacar(turno);
+        m.setVida(personAtq);
+
+        turno ++;
       }
 
 	  if (jogador.VerificaVivo() == true) {

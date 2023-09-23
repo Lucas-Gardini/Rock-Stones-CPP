@@ -1,18 +1,44 @@
 #include <chrono>  // Biblioteca de conversão de tempo
+#include <ctype.h>
 #include <iomanip> // Biblioteca para manipulação de tabelas
 #include <iostream>
 #include <string>
 #include <thread> // Biblioteca para manipulação da thread
 #include <vector>
+#include <fstream>
 
 #include ".env.h"
+#include "classes.cpp"
 
 using namespace std;
 
-#include "classes.cpp"
-
 class Utilities {
 	public:
+		static string readArquivo(string nomeArquivo) {
+			string caminho = "assets/" + nomeArquivo;
+
+			string retorno = "";
+
+			// Objeto ifstream para ler o arquivo
+    		ifstream arquivo(caminho);
+
+			// Verifica se o arquivo foi aberto com sucesso
+			if (arquivo.is_open()) {
+				std::string linha;
+				while (std::getline(arquivo, linha)) {
+					// Processa cada linha do arquivo aqui
+					retorno += linha + "\n";
+				}
+
+				// Fecha o arquivo após a leitura
+				arquivo.close();
+			} else {
+				std::cerr << "Não foi possível abrir o arquivo." << std::endl;
+			}
+
+			return retorno;
+		};
+
 		static void printTable(vector<string> cabecalho, vector<vector<string>> tabela) {
 			int num_colunas = cabecalho.size();
 			vector<int> larguras(num_colunas, 0); // Inicializa todas as larguras das colunas como 0.
@@ -21,9 +47,9 @@ class Utilities {
 			for (int i = 0; i < num_colunas; i++) {
 				larguras[i] = cabecalho[i].length() + 2; // Inicializa com a largura do cabeçalho + 2 espaços.
 				for (const vector<string> &linha : tabela) {
-				if (i < linha.size() && linha[i].length() + 2 > larguras[i]) {
-					larguras[i] = linha[i].length() + 2;
-				}
+					if (i < linha.size() && linha[i].length() + 2 > larguras[i]) {
+						larguras[i] = linha[i].length() + 2;
+					}
 				}
 			}
 
@@ -36,7 +62,7 @@ class Utilities {
 			// Imprimir linhas da tabela
 			for (const vector<string> &linha : tabela) {
 				for (int i = 0; i < num_colunas; i++) {
-				cout << setw(larguras[i]) << left << linha[i] << "| ";
+					cout << setw(larguras[i]) << left << linha[i] << "| ";
 				}
 				cout << endl;
 			}
@@ -60,7 +86,7 @@ class Utilities {
 					cout << "Nome inválido!" << endl;
 				}
 
-				cout << "Seu nome é: " << nomeJogador << ", correto? (S/N)" << endl;
+				cout << "\nSeu nome é: " << nomeJogador << ", correto? (S/N)" << endl;
 
 				while (confirmacao != 'S' && confirmacao != 'N') {
 					cout << "Escolha: ";
@@ -82,8 +108,23 @@ class Utilities {
 			return nomeJogador;
 		}
 
-		static void printInicio() {
-			cout << "Bem vindo ao jogo de RPG!" << endl;
+		static int getClasseJogador() {
+			int classeAtual = 0;
+			while (classeAtual < 1 || classeAtual > 6) {
+				cout << "\nEscolha: ";
+				cin >> classeAtual;
+
+				if (classeAtual < 1 || classeAtual > 6) {
+					cout << "Escolha inválida!" << endl;
+				}
+			}
+
+			return classeAtual - 1; // Ajusta o valor para o índice do vetor.
+		}
+
+		static void printBoasVindas(string nomeJogador) {
+			limparTerminal();
+			cout << "⛏️" << nomeJogador << ", bem vindo ao \033[32m\033[1mDeep Rock Galactic - Terminal Edition!\033[0m\n" << endl;
 
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 
@@ -101,6 +142,36 @@ class Utilities {
 			};
 
 			printTable(cabecalho, tabela);
+		}
+
+		static void printInicio() {
+			enum Escolha {SEM_ESCOLHA, SIM, NAO};
+			char pularHistoria = '_';
+			
+			Escolha escolha = SEM_ESCOLHA;
+			while (escolha == SEM_ESCOLHA) {
+				cout << "Deseja pular a história? (S/N): ";
+				cin >> pularHistoria;
+
+				pularHistoria = toupper(pularHistoria);
+
+				if (pularHistoria == 'S') {
+					escolha = SIM;
+				} else if (pularHistoria == 'N') {
+					escolha = NAO;
+				} else {
+					cout << "Escolha inválida!" << endl;
+				}
+			}
+
+			limparTerminal();
+
+			// Sai da função caso o jogador não queira ver a história.
+			if (escolha == SIM) return;
+
+			string historia = readArquivo("historia.txt");
+
+			maquinaDeEscrever(historia);
 		}
 
 		static void printDetalhesClasse(string nome, Personagem *jogador) {
@@ -128,6 +199,13 @@ class Utilities {
 
 		static void limparTerminal() {
 			system("clear||cls");
+		}
+
+		static void maquinaDeEscrever(string texto) {
+			for (int i = 0; i < texto.length(); i++) {
+				cout << texto[i] << flush;
+				std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			}
 		}
 
 		static int gerarNumeroAleatorio(int min, int max) {
