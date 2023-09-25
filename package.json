@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"start": "g++ -o rpg modules/utils.cpp modules/classes.cpp main.cpp && rpg.exe",
-		"start:linux": "g++ -o rpg main.cpp modules/utils.cpp modules/classes.cpp && ./rpg"
+		"start": "g++ -o rpg src/modules/utils.cpp src/modules/classes.cpp src/main.cpp && rpg.exe",
+		"start:linux": "g++ -o rpg src/main.cpp src/modules/utils.cpp src/modules/classes.cpp && ./rpg"
 	}
 }

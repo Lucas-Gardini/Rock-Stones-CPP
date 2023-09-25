@@ -5,9 +5,8 @@
 #include <Windows.h>
 
 #include "modules/.env.h"
-// #include "modules/classes.cpp" // arquivo já é importando em utils.cpp
-#include "modules/utils.cpp"
-// #include "modules/utils.cpp"
+#include "modules/classes.cpp"
+#include "modules/utils.h"
 
 using namespace std;
 
@@ -16,16 +15,16 @@ int main() {
 	SetConsoleOutputCP(CP_UTF8);
 
 	// Obtendo o nome do jogador.
-	string nomeJogador = Utilities::getNomeJogador();
+	string nomeJogador = getNomeJogador();
 
 	// Exibindo a mensagem de início do jogo. 
-	Utilities::printBoasVindas(nomeJogador);
+	printBoasVindas(nomeJogador);
 
 	// Obtendo a classe do jogador.
-	int classeAtual = Utilities::getClasseJogador();
+	int classeAtual = getClasseJogador();
 
 	// Limpando o terminal.
-	Utilities::limparTerminal();
+	limparTerminal();
 	
 	cout << "Classe escolhida: " << CLASSES[classeAtual] << "!" << endl;
 
@@ -34,12 +33,12 @@ int main() {
 	Personagem *jogador = jogo->criarPersonagem(nomeJogador, Classe(classeAtual));
 
 	// Exibindo a história do jogo.
-	Utilities::printInicio();
+	printInicio();
 
 	// Loop principal do jogo.
 	// while(true) {
-	// 	Utilities::printOpcoes();
-	// 	Utilities::printDetalhesClasse(nomeJogador, jogador);
+	// 	printOpcoes();
+	jogador->printDetalhesClasse();
 
 	// 	break;
 	// }
