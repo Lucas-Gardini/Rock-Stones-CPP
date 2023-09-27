@@ -20,6 +20,8 @@ void maquinaDeEscrever(string texto) {
 		cout << texto[i] << flush;
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
+
+	std::cout << std::endl;
 }
 
 int gerarNumeroAleatorio(int min, int max) {
@@ -27,8 +29,8 @@ int gerarNumeroAleatorio(int min, int max) {
 	return (rand() % (max - min + 1) + min);
 }
 
-string readArquivo(string nomeArquivo) {
-	string caminho = "assets/" + nomeArquivo;
+string lerArquivo(string nomeArquivo) {
+	string caminho = "./src/assets/" + nomeArquivo;
 
 	string retorno = "";
 
@@ -115,7 +117,11 @@ string getNomeJogador() {
 			}
 
 		}
+		
 		confirmacao = '_';
+
+		// Limpar o buffer do cin para evitar problemas com o getline
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
 
 	return nomeJogador;
@@ -182,9 +188,35 @@ void printInicio() {
 	// Sai da função caso o jogador não queira ver a história.
 	if (escolha == SIM) return;
 
-	string historia = readArquivo("historia.txt");
+	string historia = lerArquivo("historia.txt");
 
 	maquinaDeEscrever(historia);
+
+	char pularTutorial = '_';
+	escolha = SEM_ESCOLHA;
+	while (escolha == SEM_ESCOLHA) {
+		cout << "Deseja ver o tutorial? (S/N): ";
+		cin >> pularTutorial;
+
+		pularTutorial = toupper(pularTutorial);
+
+		if (pularTutorial == 'S') {
+			escolha = SIM;
+		} else if (pularTutorial == 'N') {
+			escolha = NAO;
+		} else {
+			cout << "Escolha inválida!" << endl;
+		}
+	}
+
+	// Sai da função caso o jogador não queira ver o tutorial.
+	if (escolha == SIM) return;
+
+	string tutorial = lerArquivo("tutorial.txt");
+
+	std::cout << "\n\n";
+
+	maquinaDeEscrever(tutorial);
 }
 
 void printOpcoes() {

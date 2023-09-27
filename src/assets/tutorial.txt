@@ -1,0 +1,12 @@
+Objetivo:
+Seu objetivo é conseguir escapar do planeta, vivo, e com o máximo de recursos possíveis.
+
+Como jogar:
+Para jogar, você deve escolher uma das opções apresentadas na tela, digitando o número correspondente a ela.
+Você podera escolher entre enfrentar o monstro com um ataque básico, atacar com um ataque especial ou então, você poderá invocar uma capsula de cura caso tenha NITRA o suficiente.
+
+Atenção:
+Existe uma possibilidade de você, ou seu inimigo, errarem o ataque, caso isso aconteça, vocês não irão causar dano algum.
+Todo personagem conta com atributos variados, portanto, vida, defesa ataques e quantidade de mana podem variar de acordo com o personagem escolhido.
+
+Boa sorte!
