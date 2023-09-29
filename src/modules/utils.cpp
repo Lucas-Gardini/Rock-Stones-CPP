@@ -18,7 +18,7 @@ void limparTerminal() {
 void maquinaDeEscrever(string texto) {
 	for (int i = 0; i < texto.length(); i++) {
 		cout << texto[i] << flush;
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		std::this_thread::sleep_for(std::chrono::milliseconds(25));
 	}
 
 	std::cout << std::endl;
@@ -105,7 +105,7 @@ string getNomeJogador() {
 
 		while (confirmacao != 'S' && confirmacao != 'N') {
 			cout << "Escolha: ";
-			cin >> confirmacao;
+			cin.get(confirmacao);
 
 			confirmacao = toupper(confirmacao);
 
@@ -115,13 +115,12 @@ string getNomeJogador() {
 			else if (confirmacao == 'N' || confirmacao == 'n') {
 				nomeJogador = "";
 			}
-
 		}
 		
-		confirmacao = '_';
+		// Limpar o buffer do cin para evitar problemas
+    	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-		// Limpar o buffer do cin para evitar problemas com o getline
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		confirmacao = '_';
 	}
 
 	return nomeJogador;
@@ -129,11 +128,11 @@ string getNomeJogador() {
 
 int getClasseJogador() {
 	int classeAtual = 0;
-	while (classeAtual < 1 || classeAtual > 6) {
+	while (classeAtual < 1 || classeAtual >= 6) {
 		cout << "\nEscolha: ";
 		cin >> classeAtual;
 
-		if (classeAtual < 1 || classeAtual > 6) {
+		if (classeAtual < 1 || classeAtual >= 6) {
 			cout << "Escolha inválida!" << endl;
 		}
 	}
@@ -169,8 +168,11 @@ void printInicio() {
 	
 	Escolha escolha = SEM_ESCOLHA;
 	while (escolha == SEM_ESCOLHA) {
+		// Limpando o buffer
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
 		cout << "Deseja pular a história? (S/N): ";
-		cin >> pularHistoria;
+		cin.get(pularHistoria);
 
 		pularHistoria = toupper(pularHistoria);
 
@@ -185,18 +187,20 @@ void printInicio() {
 
 	limparTerminal();
 
-	// Sai da função caso o jogador não queira ver a história.
-	if (escolha == SIM) return;
-
 	string historia = lerArquivo("historia.txt");
 
-	maquinaDeEscrever(historia);
+	// Sai da função caso o jogador não queira ver a história.
+	if (escolha == NAO)
+		maquinaDeEscrever(historia);
 
 	char pularTutorial = '_';
 	escolha = SEM_ESCOLHA;
 	while (escolha == SEM_ESCOLHA) {
+		// Limpando o buffer
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
 		cout << "Deseja ver o tutorial? (S/N): ";
-		cin >> pularTutorial;
+		cin.get(pularTutorial);
 
 		pularTutorial = toupper(pularTutorial);
 
@@ -210,7 +214,7 @@ void printInicio() {
 	}
 
 	// Sai da função caso o jogador não queira ver o tutorial.
-	if (escolha == SIM) return;
+	if (escolha == NAO) return;
 
 	string tutorial = lerArquivo("tutorial.txt");
 
@@ -222,5 +226,5 @@ void printInicio() {
 void printOpcoes() {
 	cout << "Escolha uma opção:" << endl << endl;
 
-	printTable({"1 - Atacar", "2 - Atacar Especial", "3 - Defender", "4 - Usar Item", "5 - Ver detalhes da classe"}, {});
+	printTable({"1 - Atacar", "2 - Atacar Especial", "3 - Ver detalhes da classe"}, {});
 }

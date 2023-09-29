@@ -13,12 +13,12 @@ enum Classe {
 
 const std::string CLASSES[5] = {"Batedor", "Guerreiro", "Engenheiro", "Escavador", "Medico"};
 
-enum Debuffs {
-	SANGRAMENTO,
-	ENVENENAMENTO,
+enum Escolha {
+	NAO_ESPECIFICADO,
+	NORMAL,
+	ESPECAL,
+	INFORMACOES
 };
-
-const std::string DEBUFFS[2] = {"Sangramento", "Envenenado"};
 
 enum Secoes {
 	SECAO_INDEFINIDA,
