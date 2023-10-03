@@ -39,7 +39,7 @@ class Personagem {
 
 		bool VerificaVivo() {
 			if(this->_HP > 0) {
-				return true;    
+				return true;
 			} else {
 				return false;
 			}
@@ -47,25 +47,16 @@ class Personagem {
 
 		bool VerificaMana(int mana){
 			if(this->manaAtual >= this->_MANA) {
-				return true;    
+				return true;
 			} else {
 				this->manaAtual += mana;
 				return false;
 			}
 		}
 
-		int danoFerimento() {
-			return 1 * this->grauFerimento;
-			// 1 pois o dano so sangramento não esta definido
-		}
-
-		void aumentaFerimento(int ferida) {
-			this->grauFerimento += ferida;
-		}
-
 		int* getEstatisticas(bool valoresAtuais = false) {
 			int *estatisticas = new int[4];
-			
+
 			if (valoresAtuais)
 				estatisticas[0] = this->vidaAtual;
 			else
@@ -98,13 +89,22 @@ class Personagem {
 		void solicitaCapsula() {
 			if (*this->minerios[NITRA] > CUSTO_CAPSULA) {
 				this->vidaAtual += int((this->_HP / 2));
-				cout << "Você se curou em " << int((this->_HP / 2)) << " pontos de vida!" << endl;
+				this->grauFerimento = 0;
+				cout << "Você se curou em " << int((this->_HP / 2)) << " pontos de vida e curou suas feridas!" << endl;
 			}
 		}
 
 		void tomarDano(int dano){
 			this->vidaAtual -= (dano - this->_DEF);
-		} 
+		}
+
+		void aumentaFerimento() {
+			this->grauFerimento += 1;
+		}
+
+		int danoFerimento() {
+			return DANO_SANGRAMENTO * this->grauFerimento;
+		}
 
 		void sangrar(int dano) {
 			this->vidaAtual -= dano;
@@ -112,7 +112,7 @@ class Personagem {
 
 		int atacar() {
 			int escolha = NAO_ESPECIFICADO;
-			
+
 			while(escolha == NAO_ESPECIFICADO){
 				printOpcoes();
 
@@ -134,7 +134,7 @@ class Personagem {
 			} else {
 				if(this->manaAtual >= this->_CUSTO_MANA){
 					cout << "Você usou o ataque especial!";
-				
+
 					int ran = gerarNumeroAleatorio(0, 4);
 
 					if(ran == 2){
@@ -201,14 +201,15 @@ class Medico : public Personagem {
 class Monstro{
 	protected:
 		string nome;
-    	int _HP, _ATQ, _DEF;
+    int _HP, _ATQ, _DEF;
 		IndiceMonstros _TIPOMONSTRO;
-  	public:
-    	Monstro(string nome, int ptVida, int ptDef, int ptAtq, IndiceMonstros tipoMonstro): nome(nome), _HP(ptVida), _DEF(ptDef), _ATQ(ptAtq), _TIPOMONSTRO(tipoMonstro) {}
 
-    	bool VerificaVivo() {
+	public:
+    Monstro(string nome, int ptVida, int ptDef, int ptAtq, IndiceMonstros tipoMonstro): nome(nome), _HP(ptVida), _DEF(ptDef), _ATQ(ptAtq), _TIPOMONSTRO(tipoMonstro) {}
+
+    bool VerificaVivo() {
 			if(this->_HP > 0) {
-				return true;    
+				return true;
 			} else {
 				return false;
 			}
@@ -216,7 +217,7 @@ class Monstro{
 
 		void tomarDano(int dano){
 			this->_HP -= (dano - this->_DEF);
-		}    
+		}
 
 		int atacar(){
 			cout << "O monstro atacou!" << endl;
@@ -227,29 +228,29 @@ class Monstro{
 			cout << "Vida do monstro: " << this->_HP;
 		}
 
-		virtual int ferirJogador() {
-			return 0;
+		IndiceMonstros getTipoMonstro() {
+			return _TIPOMONSTRO;
 		}
 };
 
 class Aranha : public Monstro {
   	private:
-	
-	public:
-		Aranha() : Monstro("Aranha",  ARANHA_VIDA, ARANHA_DEFESA, ARANHA_ATAQUE, IndiceMonstros::ARANHA){}
+
+		public:
+			Aranha() : Monstro("Aranha",  ARANHA_VIDA, ARANHA_DEFESA, ARANHA_ATAQUE, IndiceMonstros::ARANHA){}
 };
 
 class AranhaGrande : public Monstro {
-	private:
+		private:
 
   	public:
     	AranhaGrande() : Monstro("Aranha Grande", ARANHA_GRANDE_VIDA, ARANHA_GRANDE_DEFESA, ARANHA_GRANDE_ATAQUE, IndiceMonstros::ARANHA_GRANDE){}
 };
 
 class Escorpiao : public Monstro {
-	private:
+		private:
 
-	public:
+		public:
     	Escorpiao() : Monstro("Escorpião", ESCORPIAO_VIDA, ESCORPIAO_DEFESA, ESCORPIAO_ATAQUE, IndiceMonstros::ESCORPIAO){}
 };
 
@@ -261,30 +262,30 @@ class JogoRPG {
 		int monstroAtual = 0;
 
 		Secoes mapa[4];
-		
+
 		// Observação: As classes foram herdadas como "public" para permitir o "cast" da função abaixo
 		Personagem* criarPersonagem(string nome, Classe escolha) {
 			switch (escolha) {
 				case BATEDOR:
 					return new Batedor(nome);
 					break;
-				
+
 				case GUERREIRO:
 					return new Guerreiro(nome);
 					break;
-				
+
 				case ENGENHEIRO:
 					return new Engenheiro(nome);
 					break;
-				
+
 				case ESCAVADOR:
 					return new Escavador(nome);
 					break;
-				
+
 				case MEDICO:
 					return new Medico(nome);
 					break;
-				
+
 				default:
 					return new Personagem(nome, 0, 0, 0, 0);
 					break;
@@ -298,23 +299,23 @@ class JogoRPG {
 			this->mapa[2] = LOOTBUG;
 			this->mapa[3] = EXTRATOR;
 		}
-		
+
 		vector<Monstro *> GeraMonstros() {
 			int quantidadeMonstros = gerarNumeroAleatorio(3, 5);
 
 			vector<Monstro *> monstros = {};
-				
+
 			for(int i=0; i<quantidadeMonstros; i++) {
 				int IndiceMonstro = gerarNumeroAleatorio(0, 2);
-				
+
 				switch(IndiceMonstro) {
 					case ARANHA:
-						monstros.push_back(new Aranha());	
+						monstros.push_back(new Aranha());
 					case ARANHA_GRANDE:
-						monstros.push_back(new AranhaGrande());	
+						monstros.push_back(new AranhaGrande());
 					case ESCORPIAO:
 						monstros.push_back(new Escorpiao());
-				}			
+				}
 			}
 
 			return monstros;
@@ -324,8 +325,6 @@ class JogoRPG {
 			// Obtendo o monstro que o jogador irá enfrentar.
 			Monstro* monstro = this->monstros[monstroAtual];
 
-			
-			
 			cout << "Que a batalha se inicie!" << endl;
 			while (jogador->VerificaVivo() == true && monstro->VerificaVivo() == true) {
 				cout << "É a sua vez!" << endl;
@@ -334,17 +333,37 @@ class JogoRPG {
 				monstro->tomarDano(danoJogador);
 				monstro->vidaMonstro();
 
-				cout << "É a vez do monstro!" << endl;
-
 				// O monstro ainda está vivo, então ele pode tentar atacar
 				if (monstro->VerificaVivo())  {
+					cout << "É a vez do monstro!" << endl;
+
 					int danoMonstro = monstro->atacar();
 					jogador->tomarDano(danoMonstro);
-					jogador->vidaPersonagem();
+
+					bool ferir = false;
+					switch(monstro->getTipoMonstro()) {
+						case ARANHA:
+							int chanceFerir = gerarNumeroAleatorio(0, 6);
+							if(chanceFerir == 3) { ferir = true; }
+
+						case ARANHA_GRANDE:
+							int chanceFerir = gerarNumeroAleatorio(0, 4);
+							if(chanceFerir == 2) { ferir = true; }
+
+						case ESCORPIAO:
+							int chanceFerir = gerarNumeroAleatorio(0, 1);
+							if(chanceFerir == 1) { ferir = true; }
+					}
+
+					if(ferir == true) {
+						jogador->aumentaFerimento();
+					}
 				}
 
 				// sangramento
 				jogador->sangrar(jogador->danoFerimento());
+
+				jogador->vidaPersonagem();
 			}
 
 			if (jogador->VerificaVivo() == true) {
@@ -366,8 +385,8 @@ class JogoRPG {
 			this->mainLoop();
 		}
 
-		~JogoRPG() { 
-			delete this->jogador; 
+		~JogoRPG() {
+			delete this->jogador;
 
 			for (int monstro = 0; monstro < this->monstros.size(); monstro++) {
 				delete this->monstros[monstro];
@@ -380,7 +399,7 @@ class JogoRPG {
 			// Obtendo o nome do jogador.
 			string nomeJogador = getNomeJogador();
 
-			// Exibindo a mensagem de início do jogo. 
+			// Exibindo a mensagem de início do jogo.
 			printBoasVindas(nomeJogador);
 
 			// Obtendo a classe do jogador.
@@ -388,7 +407,7 @@ class JogoRPG {
 
 			// Limpando o terminal.
 			limparTerminal();
-			
+
 			cout << "Classe escolhida: " << CLASSES[classeAtual] << "!" << endl;
 
 			// Instânciando o personagem do jogador
@@ -397,7 +416,7 @@ class JogoRPG {
 
 			// Exibindo a história do jogo.
 			printInicio();
-			
+
 			// Exibindo os atributos da classe escolhida
 			jogador->printDetalhesClasse();
 		}
@@ -408,15 +427,15 @@ class JogoRPG {
 					case BATALHA:
 						this->secaoBatalha();
 						break;
-					
+
 					case LOOTBUG:
 						this->secaoLootbug();
 						break;
-					
+
 					case EXTRATOR:
 						this->secaoExtrator();
 						break;
-					
+
 					default:
 						cout << "Erro no programa, seção indefinida!" << endl;
 						exit(1);
