@@ -3,6 +3,10 @@
 
 #include <string>
 
+const std::string COR_VERMELHA = "\033[1;31m";
+const std::string COR_VERDE = "\033[1;32m";
+const std::string RESET_COR = "\033[0m";
+
 enum Classe {
 	BATEDOR,
 	GUERREIRO,
@@ -16,8 +20,9 @@ const std::string CLASSES[5] = {"Batedor", "Guerreiro", "Engenheiro", "Escavador
 enum Escolha {
 	NAO_ESPECIFICADO,
 	NORMAL,
-	ESPECAL,
-	INFORMACOES
+	ESPECIAL,
+	INFORMACOES_PLAYER,
+	INFORMACOES_MONSTRO
 };
 
 enum Secoes {

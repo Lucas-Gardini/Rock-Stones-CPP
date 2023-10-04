@@ -17,12 +17,15 @@ using namespace std;
 void limparTerminal();
 
 void maquinaDeEscrever(string texto);
+void dormir(int segundos);
 
 int gerarNumeroAleatorio(int min, int max);
 
 string readArquivo(string nomeArquivo);
 
 void printTable(vector<string> cabecalho, vector<vector<string>> tabela, bool removerSeparador = false);
+void printEncontroMonstro(string nomeMonstro, bool _limparTerminal);
+
 string generateVida(int vida);
 string generateArmadura(int armadura);
 string generateAtaque(int ataque);
@@ -34,5 +37,11 @@ int getClasseJogador();
 void printBoasVindas(string nomeJogador);
 void printInicio();
 void printOpcoes();
+
+int* droparMinerios();
+
+string lerArquivo(string nomeArquivo);
+
+void pressioneUmaTecla(bool limparDuasVezes = false);
 
 #endif

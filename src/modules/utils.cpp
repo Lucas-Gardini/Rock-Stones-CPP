@@ -15,18 +15,40 @@ void limparTerminal() {
 	system("clear||cls");
 }
 
-void maquinaDeEscrever(string texto) {
+void maquinaDeEscrever(string texto, bool muitoRapido = false) {
 	for (int i = 0; i < texto.length(); i++) {
 		cout << texto[i] << flush;
-		std::this_thread::sleep_for(std::chrono::milliseconds(25));
+		std::this_thread::sleep_for(std::chrono::milliseconds(muitoRapido ? 5 : 25));
 	}
 
 	std::cout << std::endl;
 }
 
+void dormir(int segundos) {
+	std::this_thread::sleep_for(std::chrono::seconds(segundos));
+}
+
+void printEncontroMonstro(string nomeMonstro, bool _limparTerminal) {
+	dormir(1);
+	
+	if (_limparTerminal) limparTerminal();
+
+	cout << "Caminhando pela caverna, você encontra um(a) " << nomeMonstro << "!" << endl;
+	dormir(1);
+	cout << "Prepare-se para lutar!" << endl;
+	dormir(1);
+}
+
+
 int gerarNumeroAleatorio(int min, int max) {
-	srand(time(NULL));
-	return (rand() % (max - min + 1) + min);
+    static bool seed_inicializado = false;  // Variável estática para garantir a inicialização única
+
+    if (!seed_inicializado) {
+        srand(time(NULL));  // Inicializa a semente apenas uma vez
+        seed_inicializado = true;
+    }
+
+    return (rand() % (max - min + 1) + min);
 }
 
 string lerArquivo(string nomeArquivo) {
@@ -99,6 +121,7 @@ string getNomeJogador() {
 
 		if (nomeJogador == "") {
 			cout << "Nome inválido!" << endl;
+			continue;
 		}
 
 		cout << "\nSeu nome é: " << nomeJogador << ", correto? (S/N)" << endl;
@@ -188,11 +211,13 @@ void printInicio() {
 	limparTerminal();
 
 	string historia = lerArquivo("historia.txt");
-
+	string chegando = lerArquivo("chegando_no_planeta.txt");
 	// Sai da função caso o jogador não queira ver a história.
-	if (escolha == NAO)
-		maquinaDeEscrever(historia);
-
+	if (escolha == NAO) {
+		maquinaDeEscrever(historia, true);
+		cout << chegando;
+	}
+	
 	char pularTutorial = '_';
 	escolha = SEM_ESCOLHA;
 	while (escolha == SEM_ESCOLHA) {
@@ -220,11 +245,42 @@ void printInicio() {
 
 	std::cout << "\n\n";
 
-	maquinaDeEscrever(tutorial);
+	maquinaDeEscrever(tutorial, true);
 }
 
 void printOpcoes() {
 	cout << "Escolha uma opção:" << endl << endl;
 
-	printTable({"1 - Atacar", "2 - Atacar Especial", "3 - Ver detalhes da classe"}, {});
+	printTable({"1 - Atacar", "2 - Atacar Especial", "3 - Ver seus atributos", "4 - Ver atributos do monstro"}, {});
+}
+
+int minerios[4][2] = {
+			{OURO, 0},
+			{MORKITA, 0},
+			{DYSTRUM, 0},
+			{NITRA, 0}
+};
+
+int* droparMinerios() {
+    int* resultado = new int[4];  // Aloca um array dinâmico para armazenar os resultados
+
+    for (int i = 0; i < 4; ++i) {
+        // Gera um número aleatório entre 1 e 255
+        minerios[i][1] = gerarNumeroAleatorio(1, 255);
+        
+        // Atualiza o array de resultados com a quantidade gerada
+        resultado[i] = minerios[i][1];
+    }
+
+    return resultado;
+}
+
+void pressioneUmaTecla(bool limpar = true) {
+	cout << "\nPressione uma tecla para continuar...";
+	
+	// Limpar o buffer de entrada
+	if (limpar)
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+	cin.get();
 }
