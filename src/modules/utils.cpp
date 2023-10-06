@@ -12,10 +12,14 @@
 
 using namespace std;
 
+// Função utilizada para limpar o terminal.
 void limparTerminal() {
 	system("clear||cls");
 }
 
+// Função utilizada para escrever o texto letra por letra.
+// Ela espera um tempo entre cada letra, simulando uma máquina de escrever.
+// Apresenta a opção de escrever muito rápido, para textos grandes.
 void maquinaDeEscrever(string texto, bool muitoRapido = false) {
 	for (int i = 0; i < texto.length(); i++) {
 		cout << texto[i] << flush;
@@ -25,10 +29,13 @@ void maquinaDeEscrever(string texto, bool muitoRapido = false) {
 	std::cout << std::endl;
 }
 
+// Função utilizada para simular um tempo de espera.
+// Ela espera um tempo em segundos.
 void dormir(int segundos) {
 	std::this_thread::sleep_for(std::chrono::seconds(segundos));
 }
 
+// Função utilizada para mostrar no terminal a mensagem de encontro com um monstro.
 void printEncontroMonstro(string nomeMonstro, bool _limparTerminal) {
 	dormir(1);
 	
@@ -40,7 +47,7 @@ void printEncontroMonstro(string nomeMonstro, bool _limparTerminal) {
 	dormir(1);
 }
 
-
+// Função utilizada para gerar um número aleatório dentro de um intervalo.
 int gerarNumeroAleatorio(int min, int max) {
     std::random_device                  rand_dev;
     std::mt19937                        generator(rand_dev());
@@ -49,7 +56,9 @@ int gerarNumeroAleatorio(int min, int max) {
     return distr(generator);
 }
 
+// Função utilizada para ler um arquivo da pasta assets e retornar seu conteúdo.
 string lerArquivo(string nomeArquivo) {
+	// Caminho do arquivo
 	string caminho = "./src/assets/" + nomeArquivo;
 
 	string retorno = "";
@@ -74,6 +83,7 @@ string lerArquivo(string nomeArquivo) {
 	return retorno;
 };
 
+// Função utilizada para exibir uma estrutura de tabela no terminal, a partir de um array de cabeçaçho e um array de linhas.
 void printTable(vector<string> cabecalho, vector<vector<string>> tabela, bool removerSeparador = false) {
 	try {
 		int num_colunas = cabecalho.size();
@@ -107,25 +117,30 @@ void printTable(vector<string> cabecalho, vector<vector<string>> tabela, bool re
 	}
 }
 
+// Funções que servem simplesmente para concatenar um texto com um número.
+// Para facilitar o seu uso abaixo.
 string generateVida(int vida) {return "Vida: " + to_string(vida);}
 string generateArmadura(int armadura) {return "Armadura: " + to_string(armadura);}
 string generateAtaque(int ataque) {return "Ataque: " + to_string(ataque);}
 string generateAtaqueEspecial(int ataque_especial) {return "Ataque Especial: " + to_string(ataque_especial);}
 
+// Função utilizada para obter o nome do jogador.
 string getNomeJogador() {
 	string nomeJogador = "";
 	char confirmacao = '_';
 
-	// Início do jogo.
+	// Loop de obtenção de nome
 	while (nomeJogador == "") {
 		cout << "Digite seu nome: ";
    		std::getline(cin, nomeJogador);
 
+		// Caso o nome do jogador não seja informado.
 		if (nomeJogador == "") {
 			cout << "Nome inválido!" << endl;
 			continue;
 		}
 
+		// Pergunta e verifica se o nome está correto.
 		cout << "\nSeu nome é: " << nomeJogador << ", correto? (S/N)" << endl;
 
 		while (confirmacao != 'S' && confirmacao != 'N') {
@@ -151,6 +166,7 @@ string getNomeJogador() {
 	return nomeJogador;
 }
 
+// Função utilizada para obter a classe do jogador.
 int getClasseJogador() {
 	int classeAtual = 0;
 	while (classeAtual < 1 || classeAtual >= 6) {
@@ -165,9 +181,10 @@ int getClasseJogador() {
 	return classeAtual - 1; // Ajusta o valor para o índice do vetor.
 }
 
+// Função utilizada para mostrar no terminal a mensagem de boas vindas e de escolha de classe.
 void printBoasVindas(string nomeJogador) {
 	limparTerminal();
-	cout << "⛏️ " << nomeJogador << ", bem vindo ao \033[32m\033[1mDeep Rock Galactic - Terminal Edition!\033[0m\n" << endl;
+	cout << nomeJogador << ", bem vindo ao \033[32m\033[1mDeep Rock Galactic - Terminal Edition!\033[0m\n" << endl;
 
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
@@ -187,6 +204,8 @@ void printBoasVindas(string nomeJogador) {
 	printTable(cabecalho, tabela);
 }
 
+// Função utilizada para mostrar no terminal os textos de introdução do jogo.
+// Como tutorial e história.
 void printInicio() {
 	enum Escolha {SEM_ESCOLHA, SIM, NAO};
 	char pularHistoria = '_';
@@ -253,20 +272,22 @@ void printInicio() {
 	maquinaDeEscrever(tutorial, true);
 }
 
+// Função utilizada para mostrar no terminal as opções de ação do jogador.
 void printOpcoes() {
 	cout << "Escolha uma opção:" << endl << endl;
 
 	printTable({"1 - Atacar", "2 - Atacar Especial", "3 - Ver seus atributos", "4 - Ver atributos do monstro", "5 - Invocar uma capsula de cura"}, {});
 }
 
-int minerios[4][2] = {
-			{OURO, 0},
-			{MORKITA, 0},
-			{DYSTRUM, 0},
-			{NITRA, 0}
-};
-
 int* droparMinerios() {
+	// Array de minérios e suas quantidades.
+	int minerios[4][2] = {
+		{OURO, 0},
+		{MORKITA, 0},
+		{DYSTRUM, 0},
+		{NITRA, 0}
+	};
+
     int* resultado = new int[4];  // Aloca um array dinâmico para armazenar os resultados
 
     for (int i = 0; i < 4; ++i) {
@@ -280,6 +301,7 @@ int* droparMinerios() {
     return resultado;
 }
 
+// Função utilizada para aguardar o jogador pressionar uma tecla.
 void pressioneUmaTecla(bool limpar = true) {
 	cout << "\nPressione uma tecla para continuar...";
 	
