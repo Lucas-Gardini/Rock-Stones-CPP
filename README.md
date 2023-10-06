@@ -112,33 +112,3 @@ Cada classe tem suas próprias habilidades e armas, e cada inimigo tem suas pró
 O jogo é baseado em turnos, então você tem um turno para atacar e um turno para se defender, e assim por diante.
 
 Ganha quem conseguir sobreviver a todos os inimigos e conseguir escapar do planeta com o máximo de recursos possíveis.
-
-## Classes
-
-### BATEDOR
-
-ESPLICAR AQUI O BATEDOR (ATRIBUTOS E HABILIDADES)
-
-### GUERREIRO
-
-ESPLICAR AQUI O GUERREIRO (ATRIBUTOS E HABILIDADES)
-
-### ENGENHEIRO
-
-ESPLICAR AQUI O ENGENHEIRO (ATRIBUTOS E HABILIDADES)
-
-### ESCAVADOR
-
-ESPLICAR AQUI O ESCAVADOR (ATRIBUTOS E HABILIDADES)
-
-### MEDICO
-
-ESPLICAR AQUI O MEDICO (ATRIBUTOS E HABILIDADES)
-
-## Inimigos
-
-### INSERIR OS INIMIGOS AQUI
-
-## Eventos
-
-### INSERIR OS EVENTOS AQUI
