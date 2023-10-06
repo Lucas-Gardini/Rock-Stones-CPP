@@ -6,6 +6,7 @@
 #include <thread> // Biblioteca para manipulação da thread
 #include <vector>
 #include <fstream>
+#include <random>
 
 #include ".env.h"
 
@@ -41,14 +42,11 @@ void printEncontroMonstro(string nomeMonstro, bool _limparTerminal) {
 
 
 int gerarNumeroAleatorio(int min, int max) {
-    static bool seed_inicializado = false;  // Variável estática para garantir a inicialização única
+    std::random_device                  rand_dev;
+    std::mt19937                        generator(rand_dev());
+    std::uniform_int_distribution<int>  distr(min, max);
 
-    if (!seed_inicializado) {
-        srand(time(NULL));  // Inicializa a semente apenas uma vez
-        seed_inicializado = true;
-    }
-
-    return (rand() % (max - min + 1) + min);
+    return distr(generator);
 }
 
 string lerArquivo(string nomeArquivo) {
@@ -77,31 +75,35 @@ string lerArquivo(string nomeArquivo) {
 };
 
 void printTable(vector<string> cabecalho, vector<vector<string>> tabela, bool removerSeparador = false) {
-	int num_colunas = cabecalho.size();
-	vector<int> larguras(num_colunas, 0); // Inicializa todas as larguras das colunas como 0.
+	try {
+		int num_colunas = cabecalho.size();
+		vector<int> larguras(num_colunas, 0); // Inicializa todas as larguras das colunas como 0.
 
-	// Encontre a largura máxima para cada coluna.
-	for (int i = 0; i < num_colunas; i++) {
-		larguras[i] = cabecalho[i].length() + 2; // Inicializa com a largura do cabeçalho + 2 espaços.
-		for (const vector<string> &linha : tabela) {
-			if (i < linha.size() && linha[i].length() + 2 > larguras[i]) {
-				larguras[i] = linha[i].length() + 2;
+		// Encontre a largura máxima para cada coluna.
+		for (int i = 0; i < num_colunas; i++) {
+			larguras[i] = cabecalho[i].length() + 2; // Inicializa com a largura do cabeçalho + 2 espaços.
+			for (const vector<string> &linha : tabela) {
+				if (i < linha.size() && linha[i].length() + 2 > larguras[i]) {
+					larguras[i] = linha[i].length() + 2;
+				}
 			}
 		}
-	}
 
-	// Imprimir cabeçalho
-	for (int i = 0; i < num_colunas; i++) {
-		cout << setw(larguras[i]) << left << cabecalho[i] << (removerSeparador ? "" : "| ");
-	}
-	cout << endl;
-
-	// Imprimir linhas da tabela
-	for (const vector<string> &linha : tabela) {
+		// Imprimir cabeçalho
 		for (int i = 0; i < num_colunas; i++) {
-			cout << setw(larguras[i]) << left << linha[i] << (removerSeparador ? "" : "| ");
+			cout << setw(larguras[i]) << left << cabecalho[i] << (removerSeparador ? "" : "| ");
 		}
 		cout << endl;
+
+		// Imprimir linhas da tabela
+		for (const vector<string> &linha : tabela) {
+			for (int i = 0; i < num_colunas; i++) {
+				cout << setw(larguras[i]) << left << linha[i] << (removerSeparador ? "" : "| ");
+			}
+			cout << endl;
+		}
+	} catch (string e) {
+		cout << "Erro ao mostrar tabela";
 	}
 }
 
@@ -215,6 +217,9 @@ void printInicio() {
 	// Sai da função caso o jogador não queira ver a história.
 	if (escolha == NAO) {
 		maquinaDeEscrever(historia, true);
+		dormir(1);
+		cout << "\n\n";
+		dormir(3);
 		cout << chegando;
 	}
 	
@@ -251,7 +256,7 @@ void printInicio() {
 void printOpcoes() {
 	cout << "Escolha uma opção:" << endl << endl;
 
-	printTable({"1 - Atacar", "2 - Atacar Especial", "3 - Ver seus atributos", "4 - Ver atributos do monstro"}, {});
+	printTable({"1 - Atacar", "2 - Atacar Especial", "3 - Ver seus atributos", "4 - Ver atributos do monstro", "5 - Invocar uma capsula de cura"}, {});
 }
 
 int minerios[4][2] = {

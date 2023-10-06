@@ -16,7 +16,9 @@ using namespace std;
 
 void limparTerminal();
 
-void maquinaDeEscrever(string texto);
+
+void maquinaDeEscrever(string texto, bool muitoRapido = false);
+
 void dormir(int segundos);
 
 int gerarNumeroAleatorio(int min, int max);
@@ -42,6 +44,6 @@ int* droparMinerios();
 
 string lerArquivo(string nomeArquivo);
 
-void pressioneUmaTecla(bool limparDuasVezes = false);
+void pressioneUmaTecla(bool limpar = true);
 
 #endif

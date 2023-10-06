@@ -1,0 +1,11 @@
+Você chegou no extrator!
+
+Porém, a caverna está desmoronando! Você deve consertar o extrator para conseguir combustível suficiente para solicitar uma nave de extração!
+
+Objetivo: você deverá descobrir a sequência correta de botões para consertar o extrator.
+
+Dica: a sequência é composta por 4 botões, sendo que cada um deles possui um número de 1 a 4.
+A cada vez que você errar, uma pedra cairá sobre você, causando dano!
+Você pode usar a sua capsula de cura para se curar, mas lembre-se que você só poderá solicitar se tiver NITRA o suficiente!
+
+Boa sorte!

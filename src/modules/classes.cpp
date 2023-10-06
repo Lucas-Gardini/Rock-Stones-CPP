@@ -123,7 +123,7 @@ class Personagem {
 	protected:
 		// Atributos inicias
 		string nome;
-		int _HP, _ATQ, _DEF, _ESP, _MANA, _CUSTO_MANA;
+		int _HP, _ATQ, _DEF, _ESP, _CUSTO_MANA;
 		int vidaAtual = 0;
 		int manaAtual = 0;
 		int grauFerimento = 0;
@@ -138,7 +138,8 @@ class Personagem {
 		};
 
 	public:
-		Personagem(string nome, int ptVida, int ptDef, int ptAtq, int mana): nome(nome), _HP(ptVida), _ATQ(ptAtq), _DEF(ptDef), _MANA(mana) {
+		Personagem(string nome, int ptVida, int ptDef, int ptAtq, int ptAtqEsp, int mana): nome(nome), _HP(ptVida), _ATQ(ptAtq), _ESP(ptAtqEsp) ,_DEF(ptDef), _CUSTO_MANA(mana) {
+			this->manaAtual = mana;
 			this->vidaAtual = ptVida;
 		}
 
@@ -158,17 +159,17 @@ class Personagem {
 			}
 		}
 
-		bool VerificaMana(int mana){
-			if(this->manaAtual >= this->_MANA) {
+		bool VerificaMana(){
+			if(this->manaAtual >= this->_CUSTO_MANA) {
 				return true;
 			} else {
-				this->manaAtual += mana;
+				this->manaAtual += (this->_CUSTO_MANA / 4);
 				return false;
 			}
 		}
 
 		int* getEstatisticas(bool valoresAtuais = false) {
-			int *estatisticas = new int[4];
+			int *estatisticas = new int[5];
 
 			if (valoresAtuais)
 				estatisticas[0] = this->vidaAtual;
@@ -178,6 +179,7 @@ class Personagem {
 			estatisticas[1] = this->_DEF;
 			estatisticas[2] = this->_ATQ;
 			estatisticas[3] = this->_ESP;
+			estatisticas[4] = this->grauFerimento;
 
 			return estatisticas;
 		}
@@ -185,13 +187,14 @@ class Personagem {
 		void printDetalhesClasse(bool valoresAtuais = false) {
 			int* estatisticas = this->getEstatisticas(valoresAtuais);
 
-			vector<string> cabecalho = {"Estatísticas:\n", ""};
+			vector<string> cabecalho = {"Estatísticas:", "     ", " Minérios:", "\n"};
 			vector<vector<string>> tabela = {
-				{"Nome:", this->nome},
-				{"Vida:", to_string(estatisticas[0])},
-				{"Defesa:", to_string(estatisticas[1])},
-				{"Dano de ataque:", to_string(estatisticas[2])},
-				{"Dano do especial:", to_string(estatisticas[3])}
+				{"Nome:", this->nome, "Ouro: ", to_string(this->minerios[OURO][1])},
+				{"Vida:", to_string(estatisticas[0]), "Morkita: ", to_string(this->minerios[MORKITA][1])},
+				{"Defesa:", to_string(estatisticas[1]), "Dystrum: ", to_string(this->minerios[DYSTRUM][1])},
+				{"Dano de ataque:", to_string(estatisticas[2]), "Nitra: ", to_string(this->minerios[NITRA][1])},
+				{"Dano do especial:", to_string(estatisticas[3]), "", ""},
+				{"Grau de sangramento: ", to_string(estatisticas[4]), "", ""}
 			};
 
 			delete [] estatisticas;
@@ -200,13 +203,16 @@ class Personagem {
 		}
 
 		void solicitaCapsula() {
-			if (this->minerios[NITRA][1] > CUSTO_CAPSULA) {
+			if (this->minerios[NITRA][1] >= CUSTO_CAPSULA) {
 				this->vidaAtual += int((this->_HP / 2));
 
 				if (this->vidaAtual > this->_HP) this->vidaAtual = this->_HP;
 
 				this->grauFerimento = 0;
 				cout << "Você se curou em " << int((this->_HP / 2)) << " pontos de vida e curou suas feridas!" << endl;
+			}
+			else{
+				cout << "Você não possue nitra suficiente para chamar uma capsula de cura." << endl;
 			}
 		}
 
@@ -249,20 +255,26 @@ class Personagem {
 
 				cin >> escolha;
 
-				if(escolha != NORMAL && escolha != ESPECIAL && escolha != INFORMACOES_PLAYER && escolha != INFORMACOES_MONSTRO){
+				if(escolha != NORMAL && escolha != ESPECIAL && escolha != INFORMACOES_PLAYER && escolha != INFORMACOES_MONSTRO && escolha != CAPSULA_CURA){
 					cout << "Escolha inválida, por favor escolha entre ataque NORMAL ou ESPECIAL!!" << endl;
 					escolha = NAO_ESPECIFICADO;
 				}
 
-				if(escolha == INFORMACOES_PLAYER){
+				else if(escolha == INFORMACOES_PLAYER){
 					limparTerminal();
 					printDetalhesClasse(true);
 					escolha = NAO_ESPECIFICADO;
 				}
 
-				if (escolha == INFORMACOES_MONSTRO) {
+				else if (escolha == INFORMACOES_MONSTRO) {
 					limparTerminal();
 					monstro->printDetalhesMonstro(true);
+					escolha = NAO_ESPECIFICADO;
+				}
+
+				else if (escolha == CAPSULA_CURA) {
+					limparTerminal();
+					solicitaCapsula();
 					escolha = NAO_ESPECIFICADO;
 				}
 
@@ -270,21 +282,22 @@ class Personagem {
 			}
 
 			int dano = this->_ATQ - monstro->getDefesaMonstro();
+			bool manaSuficiente = this->VerificaMana();
 			if(escolha != Escolha::NORMAL) {
-				if(this->manaAtual >= this->_CUSTO_MANA){
-					cout << "Você usou o ataque especial!";
-
+				if(manaSuficiente){
 					int ran = gerarNumeroAleatorio(0, 4);
 
+					dano = this->_ESP - monstro->getDefesaMonstro();
+
 					if(ran == 2){
-						cout << "ATAQUE CRÍTICO!";
-						this->manaAtual -= this->_CUSTO_MANA;
-						return this->_ESP * 2;
+						cout << "ATAQUE CRÍTICO!\n";
+						dano = this->_ESP * 2;
 					}
 
 					this->manaAtual -= this->_CUSTO_MANA;
 
-					dano = this->_ATQ - monstro->getDefesaMonstro();
+					cout << COR_VERDE << "\nVocê " << RESET_COR << "causou " << dano << " de dano!" << endl;
+					return this->_ESP;
 				} else {
 					cout << "O ataque especial não está pronto! Você trocou para o ataque normal!" << endl;
 				}
@@ -309,46 +322,46 @@ class Batedor : public Personagem {
    		int granadaIncendiaria = BATEDOR_ATQ_ESPECIAL;
 
   	public:
-		Batedor(string nome) : Personagem(nome, BATEDOR_VIDA, BATEDOR_DEFESA, BATEDOR_ATAQUE, BATEDOR_MANA){}
+		Batedor(string nome) : Personagem(nome, BATEDOR_VIDA, BATEDOR_DEFESA, BATEDOR_ATAQUE, BATEDOR_ATQ_ESPECIAL, BATEDOR_MANA){}
 };
 
 class Guerreiro : public Personagem {
 	private:
    		int miniGun = GUERREIRO_ATQ_ESPECIAL;
   	public:
-    	Guerreiro(string nome) : Personagem(nome, GUERREIRO_VIDA, GUERREIRO_DEFESA, GUERREIRO_ATAQUE, GUERREIRO_MANA){}
+    	Guerreiro(string nome) : Personagem(nome, GUERREIRO_VIDA, GUERREIRO_DEFESA, GUERREIRO_ATAQUE, GUERREIRO_ATQ_ESPECIAL, GUERREIRO_MANA){}
 };
 
 class Engenheiro : public Personagem {
   	private:
    		int sentryGun = ENGENHEIRO_ATQ_ESPECIAL;
   	public:
-    	Engenheiro(string nome) : Personagem(nome, ENGENHEIRO_VIDA, ENGENHEIRO_DEFESA, ENGENHEIRO_ATAQUE, ENGENHEIRO_MANA){}
+    	Engenheiro(string nome) : Personagem(nome, ENGENHEIRO_VIDA, ENGENHEIRO_DEFESA, ENGENHEIRO_ATAQUE, ENGENHEIRO_ATQ_ESPECIAL, ENGENHEIRO_MANA){}
 };
 
 class Escavador : public Personagem {
 	private:
    		int lancaChamas = ESCAVADOR_ATQ_ESPECIAL;
   	public:
-    	Escavador(string nome) : Personagem(nome, ESCAVADOR_VIDA, ESCAVADOR_DEFESA, ESCAVADOR_ATAQUE, ESCAVADOR_MANA){}
+    	Escavador(string nome) : Personagem(nome, ESCAVADOR_VIDA, ESCAVADOR_DEFESA, ESCAVADOR_ATAQUE, ESCAVADOR_ATQ_ESPECIAL, ESCAVADOR_MANA){}
 };
 
 class Medico : public Personagem {
 	private:
    		int kitBomba = MEDICO_ATQ_ESPECIAL;
   	public:
-    	Medico(string nome) : Personagem(nome, MEDICO_VIDA, MEDICO_DEFESA, MEDICO_ATAQUE, MEDICO_MANA){}
+    	Medico(string nome) : Personagem(nome, MEDICO_VIDA, MEDICO_DEFESA, MEDICO_ATAQUE, MEDICO_ATQ_ESPECIAL, MEDICO_MANA){}
 };
 
 
 class JogoRPG {
 	private:
 		Personagem *jogador;
-		vector<Monstro *> monstros;
+		vector<Monstro *> monstros = {};
 
 		int monstroAtual = 0;
 
-		Secoes mapa[4];
+		Secoes mapa[6]; // 6 é o máximo
 
 		// Observação: As classes foram herdadas como "public" para permitir o "cast" da função abaixo
 		Personagem* criarPersonagem(string nome, Classe escolha) {
@@ -374,38 +387,38 @@ class JogoRPG {
 					break;
 
 				default:
-					return new Personagem(nome, 0, 0, 0, 0);
+					return new Personagem(nome, 0, 0, 0, 0, 0);
 					break;
 			}
 		}
 
 		// O objetivo é ser aleatório, mas por enquanto, vamos deixar fixo.
-		void generateMap() {
-			this->mapa[0] = BATALHA;
-			this->mapa[1] = BATALHA;
-			this->mapa[2] = LOOTBUG;
-			this->mapa[3] = EXTRATOR;
+		void geraMapa() {
+			for (int i = 0; i < this->monstros.size(); i++) {
+				this->mapa[i] = BATALHA;
+			}
+			
+			this->mapa[this->monstros.size()] = EXTRATOR;
 		}
 
-		vector<Monstro *> GeraMonstros() {
+		void GeraMonstros() {
 			int quantidadeMonstros = gerarNumeroAleatorio(3, 5);
 
-			vector<Monstro *> monstros = {};
-
-			for(int i=0; i<quantidadeMonstros; i++) {
+			for(int i = 0; i < quantidadeMonstros; i++) {
 				int IndiceMonstro = gerarNumeroAleatorio(0, 2);
 
 				switch(IndiceMonstro) {
 					case ARANHA:
-						monstros.push_back(new Aranha());
+						this->monstros.push_back(new Aranha());
+						break;
 					case ARANHA_GRANDE:
-						monstros.push_back(new AranhaGrande());
+						this->monstros.push_back(new AranhaGrande());
+						break;
 					case ESCORPIAO:
-						monstros.push_back(new Escorpiao());
+						this->monstros.push_back(new Escorpiao());
+						break;
 				}
 			}
-
-			return monstros;
 		}
 
 		void secaoBatalha() {
@@ -427,7 +440,7 @@ class JogoRPG {
 				monstro->tomarDano(danoJogador);
 				monstro->vidaMonstro();
 
-				pressioneUmaTecla();
+				dormir(1);
 
 				// O monstro ainda está vivo, então ele pode tentar atacar
 				if (monstro->verificaVivo())  {
@@ -467,11 +480,13 @@ class JogoRPG {
 
 				jogador->vidaPersonagem();
 
-				pressioneUmaTecla(true);
+				pressioneUmaTecla();
 			}
 
 			if (jogador->verificaVivo() == true) {
 				cout << "Você venceu!" << endl;
+
+				dormir(2);
 
 				this->monstroAtual = this->monstroAtual + 1;
 
@@ -488,19 +503,41 @@ class JogoRPG {
 
 				delete [] minerios;
 
-				pressioneUmaTecla(true);
+				cout << ".";
+				dormir(1);
+				cout << ".";
+				dormir(1);
+				cout << "." << endl;
 			} else {
 				cout << "Você perdeu!" << endl;
 			}
 		}
 
-		void secaoLootbug() {}
-		void secaoExtrator() {}
+		void secaoExtrator() {
+			int botao;
+			limparTerminal();
+			jogador->printDetalhesClasse(true);
+
+			maquinaDeEscrever(lerArquivo("secao_extrator.txt"), false);
+
+			pressioneUmaTecla(true);
+
+			while(true){
+				cout << "Digite um número para a combinação: ";
+				cin >> botao
+
+				// if(){
+					
+				// }
+				// else{
+
+				// }
+			}
+		}
 
 	public:
 		JogoRPG() {
 			this->iniciaJogo();
-			this->generateMap();
 
 			cout << lerArquivo("personagem.txt");
 			dormir(1);
@@ -535,7 +572,11 @@ class JogoRPG {
 
 			// Instânciando o personagem do jogador
 			this->jogador = this->criarPersonagem(nomeJogador, Classe(classeAtual));
-			this->monstros = this->GeraMonstros();
+			this->GeraMonstros();
+
+			cout << this->monstros.size() << " monstros estão no seu caminho!\n" << endl;
+
+			this->geraMapa();
 
 			// Exibindo a história do jogo.
 			printInicio();
@@ -545,14 +586,10 @@ class JogoRPG {
 		}
 
 		void mainLoop() {
-			for (int secaoAtual = 0; secaoAtual < 4; secaoAtual++) {
+			for (int secaoAtual = 0; secaoAtual < this->monstros.size() + 1; secaoAtual++) {
 				switch (this->mapa[secaoAtual]) {
 					case BATALHA:
 						this->secaoBatalha();
-						break;
-
-					case LOOTBUG:
-						this->secaoLootbug();
 						break;
 
 					case EXTRATOR:
@@ -565,5 +602,16 @@ class JogoRPG {
 						break;
 				}
 			}
+
+			limparTerminal();
+			cout << "Fim de jogo!" << endl;
+
+			this->jogador->printDetalhesClasse(true);
+
+			pressioneUmaTecla();
+
+			limparTerminal();
+
+			cout << lerArquivo("fuga_do_planeta.txt");
 		}
 };

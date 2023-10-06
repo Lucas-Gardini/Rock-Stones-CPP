@@ -22,17 +22,17 @@ enum Escolha {
 	NORMAL,
 	ESPECIAL,
 	INFORMACOES_PLAYER,
-	INFORMACOES_MONSTRO
+	INFORMACOES_MONSTRO,
+	CAPSULA_CURA
 };
 
 enum Secoes {
 	SECAO_INDEFINIDA,
 	BATALHA,
-	LOOTBUG,
 	EXTRATOR
 };
 
-const std::string SECOES[4] = {"Seção Indefinida", "Batalha", "Lootbug", "Extrator"};
+const std::string SECOES[3] = {"Seção Indefinida", "Batalha", "Extrator"};
 
 enum Minerios {
 	OURO,
