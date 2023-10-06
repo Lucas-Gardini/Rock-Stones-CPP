@@ -87,6 +87,8 @@ Dentre elas temos funções de leitura de arquivos, uma função para escrever n
 
 Recomendamos a leitura do arquivo para entender melhor as funções.
 
+--------------------
+
 #### Arquivo classes.cpp
 
 Indo para o arquivo `classes.cpp`, temos as classes do projeto.
@@ -105,9 +107,9 @@ Recomendamos a leitura do arquivo para entender melhor as classes.
 
 ## Como jogar
 
-O jogo é bem simples, você escolhe uma classe e de maneira aleatória, um evento acontece ou um inimigo é escolhido para você enfrentar.
+O jogo é bem simples, você escolhe uma classe e você precisa batalhar com inimigos até conseguir escapar do planeta.
 
-Cada classe tem suas próprias habilidades e armas, e cada inimigo tem suas próprias habilidades e fraquezas.
+Cada classe tem seus próprios atributos, e cada inimigo tem seus próprios atributos.
 
 O jogo é baseado em turnos, então você tem um turno para atacar e um turno para se defender, e assim por diante.
 
