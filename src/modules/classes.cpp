@@ -152,7 +152,7 @@ class Personagem {
 		}
 
 		bool verificaVivo() {
-			if(this->_HP > 0) {
+			if(this->vidaAtual > 0) {
 				return true;
 			} else {
 				return false;
@@ -356,6 +356,8 @@ class Medico : public Personagem {
 
 class JogoRPG {
 	private:
+		bool morreu = false;
+
 		Personagem *jogador;
 		vector<Monstro *> monstros = {};
 
@@ -520,19 +522,64 @@ class JogoRPG {
 
 			maquinaDeEscrever(lerArquivo("secao_extrator.txt"), false);
 
-			pressioneUmaTecla(true);
+			char *codigoExtrator = gerarCodigoExtrator();
+			string codigoDigitado = "0000";
+
+			cout << codigoExtrator[0] << codigoExtrator[1] << codigoExtrator[2] << codigoExtrator[3] << endl;
 
 			while(true){
+				bool acertou = true;
+
 				cout << "Digite um número para a combinação: ";
-				cin >> botao
+				std::getline(cin, codigoDigitado);
 
-				// if(){
-					
-				// }
-				// else{
+				if (codigoDigitado[0] == codigoExtrator[0]) {
+					cout << COR_VERDE << codigoDigitado[0] << RESET_COR;
+				} else {
+					cout << COR_VERMELHA << codigoDigitado[0] << RESET_COR;
+					acertou = false;
+				}
 
-				// }
+				if (codigoDigitado[1] == codigoExtrator[1]) {
+					cout << COR_VERDE << codigoDigitado[1] << RESET_COR;
+				} else {
+					cout << COR_VERMELHA << codigoDigitado[1] << RESET_COR;
+					acertou = false;
+				}
+
+				if (codigoDigitado[2] == codigoExtrator[2]) {
+					cout << COR_VERDE << codigoDigitado[2] << RESET_COR;
+				} else {
+					cout << COR_VERMELHA << codigoDigitado[2] << RESET_COR;
+					acertou = false;
+				}
+
+				if (codigoDigitado[3] == codigoExtrator[3]) {
+					cout << COR_VERDE << codigoDigitado[3] << RESET_COR;
+				} else {
+					cout << COR_VERMELHA << codigoDigitado[3] << RESET_COR;
+					acertou = false;
+				}
+
+				if (acertou) {
+					cout << "\nVocê desbloqueou o extrator!" << endl;
+					cout << "\nVocê entra no extrator e foge do planeta!" << endl;
+					break;
+				} else {
+					cout << "\nVocê errou!" << endl;
+					cout << "\nO terremoto fez uma pedra cair em cima de você! Você recebeu " << COR_VERMELHA << "10 de dano!" << RESET_COR << endl;
+					this->jogador->tomarDano(10);
+
+					if (this->jogador->verificaVivo() == false) {
+						cout << "Você morreu! Fim de jogo!" << endl;
+						break;
+					}
+				}
+
+				pressioneUmaTecla(false);
 			}
+
+			delete [] codigoExtrator;
 		}
 
 	public:
@@ -588,9 +635,9 @@ class JogoRPG {
 		void mainLoop() {
 			for (int secaoAtual = 0; secaoAtual < this->monstros.size() + 1; secaoAtual++) {
 				switch (this->mapa[secaoAtual]) {
-					case BATALHA:
-						this->secaoBatalha();
-						break;
+					// case BATALHA:
+					// 	this->secaoBatalha();
+					// 	break;
 
 					case EXTRATOR:
 						this->secaoExtrator();
@@ -598,7 +645,7 @@ class JogoRPG {
 
 					default:
 						cout << "Erro no programa, seção indefinida!" << endl;
-						exit(1);
+						// exit(1);
 						break;
 				}
 			}
@@ -606,12 +653,13 @@ class JogoRPG {
 			limparTerminal();
 			cout << "Fim de jogo!" << endl;
 
-			this->jogador->printDetalhesClasse(true);
+			if (!this->morreu) {
+				this->jogador->printDetalhesClasse(true);
 
-			pressioneUmaTecla();
+				limparTerminal();
 
-			limparTerminal();
-
-			cout << lerArquivo("fuga_do_planeta.txt");
+				cout << lerArquivo("fuga_do_planeta.txt");
+				maquinaDeEscrever(lerArquivo("fim.txt"));
+			}
 		}
 };

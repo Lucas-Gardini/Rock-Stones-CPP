@@ -46,4 +46,6 @@ string lerArquivo(string nomeArquivo);
 
 void pressioneUmaTecla(bool limpar = true);
 
+char* gerarCodigoExtrator();
+
 #endif

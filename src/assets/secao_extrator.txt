@@ -1,6 +1,7 @@
 Você chegou no extrator!
 
-Porém, a caverna está desmoronando! Você deve consertar o extrator para conseguir combustível suficiente para solicitar uma nave de extração!
+Porém, a caverna está desmoronando! 
+Você deve consertar o extrator para conseguir realizar uma extração!
 
 Objetivo: você deverá descobrir a sequência correta de botões para consertar o extrator.
 

@@ -289,3 +289,24 @@ void pressioneUmaTecla(bool limpar = true) {
 
 	cin.get();
 }
+
+char* gerarCodigoExtrator() {
+    // Inicializa o gerador de números aleatórios com o tempo atual
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    // Array para armazenar os dígitos
+    char* digitos = new char[5]{'\0'};  // Adicionando '\0' para garantir que seja tratado como uma string
+
+    // Preenche o array com os números de '1' a '4'
+    for (int i = 0; i < 4; ++i) {
+        digitos[i] = static_cast<char>('1' + i);
+    }
+
+    // Embaralha os dígitos usando o algoritmo de Fisher-Yates
+    for (int i = 3; i > 0; --i) {
+        int j = std::rand() % (i + 1);
+        std::swap(digitos[i], digitos[j]);
+    }
+
+    return digitos;
+}
