@@ -217,7 +217,7 @@ class Personagem {
 				cout << "Você se curou em " << int((this->_HP / 2)) << " pontos de vida e curou suas feridas!" << endl;
 			}
 			else{
-				cout << "Você não possue nitra suficiente para chamar uma capsula de cura." << endl;
+				cout << "Você não possui nitra suficiente para chamar uma capsula de cura." << endl;
 			}
 		}
 
@@ -536,27 +536,48 @@ class JogoRPG {
 				cout << "." << endl;
 			} else {
 				cout << "Você morreu!" << endl;
+				this->morreu = true;
                 return;
             }
         }
 
 		// Seção responsável por executar o extrator, onde o jogador deve digitar uma combinação de botões para conseguir escapar.
 		void secaoExtrator() {
-			int botao;
+			char escolha = static_cast<char>(NAO_ESPECIFICADO);
+
 			limparTerminal();
 			jogador->printDetalhesClasse(true);
 
+			while (escolha == static_cast<char>(NAO_ESPECIFICADO)) {
+				cout << "\nAntes de continuar, você deseja solicitar uma cápsula de cura? (S/N): ";
+				cin >> escolha;
+
+				escolha = toupper(escolha);
+
+				if (escolha == 'S') {
+					jogador->solicitaCapsula();
+				} else if (escolha == 'N') {
+					break;
+				} else {
+					cout << "Opção inválida!" << endl;
+					escolha = NAO_ESPECIFICADO;
+				}
+			}
+
+			cout << "\n";
+
+			pressioneUmaTecla();
 			maquinaDeEscrever(lerArquivo("secao_extrator.txt"), false);
 
 			char *codigoExtrator = gerarCodigoExtrator();
 			string codigoDigitado = "0000";
 
-			cout << codigoExtrator[0] << codigoExtrator[1] << codigoExtrator[2] << codigoExtrator[3] << endl;
+			// cout << codigoExtrator[0] << codigoExtrator[1] << codigoExtrator[2] << codigoExtrator[3] << endl;
 
 			while(true){
 				bool acertou = true;
 
-				cout << "Digite um número para a combinação: ";
+				cout << "Digite uma sequência para verificação (ex: 1234): ";
 				std::getline(cin, codigoDigitado);
 
 				if (codigoDigitado[0] == codigoExtrator[0]) {
@@ -596,13 +617,14 @@ class JogoRPG {
 					cout << "\nO terremoto fez uma pedra cair em cima de você! Você recebeu " << COR_VERMELHA << "10 de dano!" << RESET_COR << endl;
 					this->jogador->tomarDano(10);
 
+					this->jogador->vidaPersonagem();
+
 					if (this->jogador->verificaVivo() == false) {
 						cout << "Você morreu! Fim de jogo!" << endl;
+						this->morreu = true;
 						break;
 					}
 				}
-
-				pressioneUmaTecla(false);
 			}
 
 			delete [] codigoExtrator;
@@ -661,10 +683,12 @@ class JogoRPG {
 		void mainLoop() {
 			// Loop das seções do mapa
 			for (int secaoAtual = 0; secaoAtual < this->monstros.size() + 1; secaoAtual++) {
+				if (this->morreu) break;
+
 				switch (this->mapa[secaoAtual]) {
-					// case BATALHA:
-					// 	this->secaoBatalha();
-					// 	break;
+					case BATALHA:
+						this->secaoBatalha();
+						break;
 
 					case EXTRATOR:
 						this->secaoExtrator();
@@ -672,12 +696,12 @@ class JogoRPG {
 
 					default:
 						cout << "Erro no programa, seção indefinida!" << endl;
-						// exit(1);
+						exit(1);
 						break;
 				}
 			}
 
-			limparTerminal();
+			// limparTerminal();
 			cout << "Fim de jogo!" << endl;
 
 			if (!this->morreu) {

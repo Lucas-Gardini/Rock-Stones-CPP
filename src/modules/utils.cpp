@@ -198,7 +198,7 @@ void printBoasVindas(string nomeJogador) {
 		{generateVida(BATEDOR_VIDA), generateVida(GUERREIRO_VIDA),  generateVida(ENGENHEIRO_VIDA), generateVida(ESCAVADOR_VIDA), generateVida(MEDICO_VIDA)},
 		{generateArmadura(BATEDOR_DEFESA), generateArmadura(GUERREIRO_DEFESA), generateArmadura(ENGENHEIRO_DEFESA), generateArmadura(ESCAVADOR_DEFESA), generateArmadura(MEDICO_DEFESA)},
 		{generateAtaque(BATEDOR_ATAQUE), generateAtaque(GUERREIRO_ATAQUE), generateAtaque(ENGENHEIRO_ATAQUE), generateAtaque(ESCAVADOR_ATAQUE), generateAtaque(MEDICO_ATAQUE)},
-		{generateAtaqueEspecial(0), generateAtaqueEspecial(0), generateAtaqueEspecial(0), generateAtaqueEspecial(0), generateAtaqueEspecial(0)},
+		{generateAtaqueEspecial(BATEDOR_ATQ_ESPECIAL), generateAtaqueEspecial(GUERREIRO_ATQ_ESPECIAL), generateAtaqueEspecial(ESCAVADOR_ATQ_ESPECIAL), generateAtaqueEspecial(ESCAVADOR_ATQ_ESPECIAL), generateAtaqueEspecial(MEDICO_ATQ_ESPECIAL)},
 	};
 
 	printTable(cabecalho, tabela);
