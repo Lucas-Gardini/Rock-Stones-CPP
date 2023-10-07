@@ -3,10 +3,12 @@
 
 #include <string>
 
+// Cores para o terminal.
 const std::string COR_VERMELHA = "\033[1;31m";
 const std::string COR_VERDE = "\033[1;32m";
 const std::string RESET_COR = "\033[0m";
 
+// Tipos de classes e seus nomes.
 enum Classe {
 	BATEDOR,
 	GUERREIRO,
@@ -17,6 +19,7 @@ enum Classe {
 
 const std::string CLASSES[5] = {"Batedor", "Guerreiro", "Engenheiro", "Escavador", "Medico"};
 
+// Tipos de escolha e seções do jogo.
 enum Escolha {
 	NAO_ESPECIFICADO,
 	NORMAL,
@@ -34,6 +37,7 @@ enum Secoes {
 
 const std::string SECOES[3] = {"Seção Indefinida", "Batalha", "Extrator"};
 
+// Tipos de minérios e seus nomes.
 enum Minerios {
 	OURO,
 	MORKITA,
@@ -43,12 +47,14 @@ enum Minerios {
 
 const std::string MINERIOS[4] = {"Ouro", "Morkita", "Dystrum", "Nitra"};
 
+// TIpos de monstros.
 enum IndiceMonstros {
 	ARANHA,
 	ARANHA_GRANDE,
 	ESCORPIAO
 };
 
+// Constantes do jogo.
 const int CUSTO_CAPSULA = 100;
 const int CURA_CAPSULA = 20;
 
